@@ -70,7 +70,9 @@
       number:
         "<input class='bootbox-input bootbox-input-number form-control' autocomplete=off type='number' />",
       password:
-        "<input class='bootbox-input bootbox-input-password form-control' autocomplete='off' type='password' />"
+        "<input class='bootbox-input bootbox-input-password form-control' autocomplete='off' type='password' />",
+      radio:
+        "<div class='bootbox-input-radio'></div>"
     }
   };
 
@@ -417,7 +419,6 @@
           return $(this).val();
         }).get();
       } else {
-        value = input.val();
       }
 
       return options.callback.call(this, value);
@@ -450,6 +451,29 @@
       case "number":
       case "password":
         input.val(options.value);
+        break;
+
+        inputOptions = options.inputOptions || [];
+
+        if (!$.isArray(inputOptions)) {
+          throw new Error("Please pass an array of input options");
+        }
+
+        if (!inputOptions.length) {
+          throw new Error("prompt with radio buttons requires options");
+        }
+
+        each(inputOptions, function (_, option) {
+
+          // assume the element to attach to is the input...
+          var elem = input;
+
+          if (option.value === undefined || option.text === undefined) {
+            throw new Error("each option needs a `value` and a `text` property");
+          }
+
+          elem.append("<input type='radio' name='radio' class='bootbox-radio-option' style='vertical-align:top;' value='" + option.value + "' />&nbsp;&nbsp;&nbsp;" + option.text + "<br/>");
+        });
         break;
 
       case "select":
