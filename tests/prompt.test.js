@@ -564,6 +564,115 @@ describe("bootbox.prompt", function() {
         });
       });
     });
+    describe("setting inputType radio", function() {
+      describe("without options", function() {
+        beforeEach(function() {
+          return this.options.inputType = 'radio';
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"](/prompt with radio buttons requires options/);
+        });
+      });
+      describe("with invalid options", function() {
+        beforeEach(function() {
+          this.options.inputType = 'radio';
+          return this.options.inputOptions = 'foo';
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"]("Please pass an array of input options");
+        });
+      });
+      describe("with empty options", function() {
+        beforeEach(function() {
+          this.options.inputType = 'radio';
+          return this.options.inputOptions = [];
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"](/prompt with radio buttons requires options/);
+        });
+      });
+      describe("with options in the wrong format", function() {
+        beforeEach(function() {
+          this.options.inputType = "radio";
+          return this.options.inputOptions = [
+            {
+              foo: "bar"
+            }
+          ];
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"]("each option needs a `value` and a `text` property");
+        });
+      });
+      describe("with a value but no text", function() {
+        beforeEach(function() {
+          this.options.inputType = 'radio';
+          return this.options.inputOptions = [
+            {
+              value: 'bar'
+            }
+          ];
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"]("each option needs a `value` and a `text` property");
+        });
+      });
+      describe("with an invalid second options", function() {
+        beforeEach(function() {
+          this.options.inputType = 'radio';
+          return this.options.inputOptions = [
+            {
+              value: "bar",
+              text: "bar"
+            }, {
+              text: "foo"
+            }
+          ];
+        });
+        return it("throws an error", function() {
+          return expect(this.create).to["throw"]("each option needs a `value` and a `text` property");
+        });
+      });
+      describe("with valid options", function() {
+        beforeEach(function() {
+          this.options.inputType = "radio";
+          this.options.inputOptions = [
+            {
+              value: 1,
+              text: 'foo'
+            }, {
+              value: 2,
+              text: 'bar'
+            }, {
+              value: 3,
+              text: 'foobar'
+            }
+          ];
+          return this.create();
+        });
+        it("has proper class", function() {
+          return expect(this.find("input[type = 'radio']").hasClass("bootbox-radio-option")).to.be.ok;
+        });
+        return it("with three options", function() {
+          return expect(this.find("input[type = 'radio']").length).to.equal(3);
+        });
+      });
+      describe("with zero as the first option", function() {
+        beforeEach(function() {
+          this.options.inputType = "radio";
+          this.options.inputOptions = [
+            {
+              value: 0,
+              text: "foo"
+            }
+          ];
+          return this.create();
+        });
+        return it("shows the radio inputs", function() {
+          return expect(this.exists("input[type = 'radio']")).to.be.ok;
+        });
+      });
+    });
     describe("setting inputType checkbox", function() {
       describe("without options", function() {
         beforeEach(function() {
